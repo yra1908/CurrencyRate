@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Currency</string>
-    <string name="action_settings">Settings</string>
     <string name="main_activity">Main</string>
     <string name="currency_log_activity">Log</string>
     <string name="currency_graph_activity">Graph</string>

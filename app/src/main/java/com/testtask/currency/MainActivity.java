@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView output;
     List<MyTask> tasks;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
