@@ -1,6 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item
+        android:id="@+id/action_main"
+        android:orderInCategory="100"
+        android:title="@string/main_activity"
+        android:onClick="btnClickHandlerFirstActivity2"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_currency_log"
+        android:orderInCategory="101"
+        android:title="@string/currency_log_activity"
+        android:onClick="btnClickHandlerSecondActivity2"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_currency_graph"
+        android:orderInCategory="102"
+        android:title="@string/currency_graph_activity"
+        android:onClick="btnClickHandlerThirdActivity2"
+        app:showAsAction="ifRoom"/>
 </menu>
