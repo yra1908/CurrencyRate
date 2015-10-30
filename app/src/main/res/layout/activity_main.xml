@@ -192,7 +192,7 @@
             android:layout_toRightOf="@+id/imageView4"
             android:padding="10dp"
             android:paddingTop="10dp"
-            android:text="EUR"
+            android:text="RUR"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
             android:textIsSelectable="false" />
 

@@ -2,6 +2,7 @@ package com.testtask.currency;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -24,7 +25,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView output;
     ProgressBar pb;
     List<MyTask> tasks;
 
@@ -39,15 +39,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        output = (TextView) findViewById(R.id.textView);
-        output.setMovementMethod(new ScrollingMovementMethod());
-
         pb = (ProgressBar) findViewById(R.id.progressBar);
         pb.setVisibility(View.INVISIBLE);
 
         tasks = new ArrayList<>();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(list!=null){
+            updateDisplay();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void updateDisplay() {
-
-//        output.append(message + "\n");
 
         TextView resSaleUSD = (TextView) findViewById(R.id.saleUSD);
         TextView resBuyUSD = (TextView) findViewById(R.id.buyUSD);
