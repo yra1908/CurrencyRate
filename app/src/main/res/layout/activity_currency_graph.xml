@@ -9,55 +9,92 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.testtask.currency.CurrencyGraphActivity">
 
-
-    <Button
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PICK START DATE"
-        android:id="@+id/button5"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+
+    <Button
+        android:id="@+id/btnChangeStartDate"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="@string/set_start_date_button"
+        android:layout_below="@+id/startDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="setDate"/>
+
+    <TextView
+        android:id="@+id/StartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_date"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/btnChangeEndDate"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="PICK END DATE"
-        android:id="@+id/button6"
-        android:layout_below="@+id/button5"
+        android:text="@string/set_start_date_button"
+        android:layout_below="@+id/startDate"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="41dp" />
+        android:onClick="setStartDate"/>
+
+    <TextView
+        android:id="@+id/startDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_date"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/startDateRes"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/startDate"
+        android:layout_toEndOf="@+id/startDate" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/button3"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="BUILD GRAPH"
-        android:id="@+id/button7"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:text="@string/set_end_date_button"
+        android:onClick="setEndDate"
+        android:layout_below="@+id/endDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <DatePicker
+    <TextView
+        android:id="@+id/endDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/datePicker"
-        android:layout_alignTop="@+id/button5"
-        android:layout_toRightOf="@+id/button5"
-        android:layout_toEndOf="@+id/button5" />
+        android:text="@string/set_date"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_below="@+id/btnChangeStartDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp" />
 
-    <DatePicker
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/endDateRes"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/datePicker2"
-        android:layout_alignTop="@+id/button6"
-        android:layout_alignLeft="@+id/button7"
-        android:layout_alignStart="@+id/button7" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_below="@+id/button7"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp" />
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignTop="@+id/endDate"
+        android:layout_toRightOf="@+id/endDate"
+        android:layout_toEndOf="@+id/endDate" />
 </RelativeLayout>

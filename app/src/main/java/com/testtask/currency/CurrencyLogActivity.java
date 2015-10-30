@@ -10,18 +10,18 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.testtask.currency.domain.Currency;
+import com.testtask.currency.service.CurrencyAdapter;
 import com.testtask.currency.service.CurrencyJSONParser;
 import com.testtask.currency.service.HttpManager;
 
@@ -36,7 +36,7 @@ public class CurrencyLogActivity extends AppCompatActivity {
     private int year;
     private int month;
     private int day;
-    List<Currency> list;
+    private List<Currency> list;
 
     ProgressBar pb;
     List<MyTask> tasks;
@@ -44,7 +44,6 @@ public class CurrencyLogActivity extends AppCompatActivity {
 
     private static final int DATE_DIALOG_ID = 999;
     private final String logPbAPI = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
-    private final String pbAPI = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,7 @@ public class CurrencyLogActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
 
         if(list!=null){
-//            updateDisplay();
+            updateDisplay();
         }
     }
 
@@ -102,7 +101,7 @@ public class CurrencyLogActivity extends AppCompatActivity {
     // display current date
     public void setCurrentDateOnView() {
 
-        tvDisplayDate = (TextView) findViewById(R.id.tvDate);
+        tvDisplayDate = (TextView) findViewById(R.id.startDateRes);
 
 
         final Calendar c = Calendar.getInstance();
@@ -150,6 +149,8 @@ public class CurrencyLogActivity extends AppCompatActivity {
             tvDisplayDate.setText(new StringBuilder().append(month + 1)
                     .append("-").append(day).append("-").append(year)
                     .append(" "));
+
+            Log.d("LogActivity", "year="+year);
         }
     };
 
@@ -178,11 +179,14 @@ public class CurrencyLogActivity extends AppCompatActivity {
         task.execute(uri);
     }
 
-    private void updateDisplay(String message) {
-        //stub
-        TextView output = (TextView) findViewById(R.id.output_stub);
-        output.setMovementMethod(new ScrollingMovementMethod());
-        output.append(message + "\n");
+    private void updateDisplay() {
+
+        CurrencyAdapter adapter = new CurrencyAdapter(this, R.layout.list_item_currency, list);
+
+        ListView listView = (ListView) findViewById(android.R.id.list);
+        listView.setAdapter(adapter);
+
+
     }
 
     private class MyTask extends AsyncTask<String, String, String> {
@@ -205,8 +209,11 @@ public class CurrencyLogActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            //list = CurrencyJSONParser.parseFeed(result);
-            updateDisplay(result);
+            Log.d("LogActivity", "before parse list");
+            list = CurrencyJSONParser.parseLogFeed(result);
+            Log.d("LogActivity", "after parse list");
+
+            updateDisplay();
 
             tasks.remove(this);
             if (tasks.size() == 0) {

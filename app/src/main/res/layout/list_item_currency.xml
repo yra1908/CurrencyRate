@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/imageView5"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/curName"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/imageView5"
+        android:layout_toEndOf="@+id/imageView5"
+        android:layout_marginLeft="12dp" />
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/saleCoef"
+        android:layout_centerVertical="true"
+        android:layout_alignTop="@+id/curName"
+        android:layout_alignRight="@+id/curName"
+        android:layout_alignEnd="@+id/curName"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="/"
+        android:id="@+id/textView9"
+        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/saleCoef"
+        android:layout_toStartOf="@+id/saleCoef" />
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/buyCoef"
+        android:layout_centerVertical="true"
+        android:layout_alignTop="@+id/curName"
+        android:layout_toLeftOf="@+id/saleCoef"
+        android:layout_toStartOf="@+id/saleCoef"
+        android:layout_margin="5dp" />
+</RelativeLayout>

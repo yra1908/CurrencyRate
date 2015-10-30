@@ -4,4 +4,16 @@
     <string name="currency_log_activity">Log</string>
     <string name="currency_graph_activity">Graph</string>
     <string name="date_pick">Pick a date</string>
+    <string name="currency_column">CURRENCY</string>
+    <string name="buy_column">BUY</string>
+    <string name="sale_column">SALE</string>
+    <string name="get_currency_rate_button">GET CURRENCY RATE</string>
+    <string name="usd_abr">USD</string>
+    <string name="eur_abr">EUR</string>
+    <string name="rub_abr">RUB</string>
+    <string name="set_date">Date (M-D-YYYY):</string>
+    <string name="set_date_button">Set Date</string>
+    <string name="get_data_button">Get Data</string>
+    <string name="set_start_date_button">SET START DATE</string>
+    <string name="set_end_date_button">SET END DATE</string>
 </resources>

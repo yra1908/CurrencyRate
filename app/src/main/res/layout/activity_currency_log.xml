@@ -21,46 +21,36 @@
         android:id="@+id/btnChangeDate"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="Set Date"
-        android:layout_below="@+id/lblDate"
+        android:text="@string/set_date_button"
+        android:layout_below="@+id/startDate"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="setDate"/>
 
     <TextView
-        android:id="@+id/lblDate"
+        android:id="@+id/startDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Date (M-D-YYYY): "
+        android:text="@string/set_date"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:id="@+id/tvDate"
+        android:id="@+id/startDateRes"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="aaa"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/lblDate"
-        android:layout_toEndOf="@+id/lblDate" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="stub"
-        android:id="@+id/output_stub"
-        android:layout_alignTop="@+id/listView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+        android:layout_toRightOf="@+id/startDate"
+        android:layout_toEndOf="@+id/startDate" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listView2"
+        android:id="@android:id/list"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/btnChangeDate" />
@@ -68,12 +58,11 @@
     <Button
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="Get Data"
+        android:text="@string/get_data_button"
         android:id="@+id/button2"
-        android:layout_above="@+id/listView2"
-        android:layout_toRightOf="@+id/btnChangeDate"
-        android:layout_toEndOf="@+id/btnChangeDate"
-        android:layout_marginLeft="20dp"
-        android:onClick="getCurrencyLogForSetDate"/>
+        android:onClick="getCurrencyLogForSetDate"
+        android:layout_below="@+id/startDate"
+        android:layout_alignLeft="@+id/progressBar"
+        android:layout_alignStart="@+id/progressBar" />
 
 </RelativeLayout>
