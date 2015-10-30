@@ -11,9 +11,12 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.testtask.currency.domain.Currency;
+import com.testtask.currency.service.CurrencyJSONParser;
 import com.testtask.currency.service.HttpManager;
 
 import java.util.ArrayList;
@@ -22,7 +25,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     TextView output;
+    ProgressBar pb;
     List<MyTask> tasks;
+
+    List<Currency> list;
+
+
+    private final String pbAPI = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 
 
     @Override
@@ -33,19 +42,12 @@ public class MainActivity extends AppCompatActivity {
         output = (TextView) findViewById(R.id.textView);
         output.setMovementMethod(new ScrollingMovementMethod());
 
+        pb = (ProgressBar) findViewById(R.id.progressBar);
+        pb.setVisibility(View.INVISIBLE);
+
         tasks = new ArrayList<>();
     }
 
-    public void btnClickHandlerSecondActivity(View view) {
-        Intent secondActivity = new Intent(this, CurrencyLogActivity.class);
-        startActivity(secondActivity);
-
-    }
-
-    public void btnClickHandlerThirdActivity(View view) {
-        Intent thirdActivity = new Intent(this, CurrencyLogActivity.class);
-        startActivity(thirdActivity);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,11 +63,6 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_currency_graph) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -94,14 +91,39 @@ public class MainActivity extends AppCompatActivity {
     public void getCurrencyRate(View view) {
 
         if (isOnline()) {
-            requestData("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5");
+            requestData(pbAPI);
         } else {
             Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
         }
     }
 
-    protected void updateDisplay(String message) {
-        output.append(message + "\n");
+    protected void updateDisplay() {
+
+//        output.append(message + "\n");
+
+        TextView resSaleUSD = (TextView) findViewById(R.id.saleUSD);
+        TextView resBuyUSD = (TextView) findViewById(R.id.buyUSD);
+        TextView resSaleEUR = (TextView) findViewById(R.id.saleEUR);
+        TextView resBuyEUR = (TextView) findViewById(R.id.buyEUR);
+        TextView resSaleRUR = (TextView) findViewById(R.id.saleRUR);
+        TextView resBuyRUR = (TextView) findViewById(R.id.buyRUR);
+
+        if (list != null){
+            for (Currency cur:list) {
+                if (cur.getName().equals("USD")){
+                    resSaleUSD.append((String.valueOf(cur.getSaleCoef())));
+                    resBuyUSD.append((String.valueOf(cur.getBuyCoef())));
+                }
+                if (cur.getName().equals("EUR")){
+                    resSaleEUR.append((String.valueOf(cur.getSaleCoef())));
+                    resBuyEUR.append((String.valueOf(cur.getBuyCoef())));
+                }
+                if (cur.getName().equals("RUR")){
+                    resSaleRUR.append((String.valueOf(cur.getSaleCoef())));
+                    resBuyRUR.append((String.valueOf(cur.getBuyCoef())));
+                }
+            }
+        }
     }
 
     protected boolean isOnline() {
@@ -118,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            if (tasks.size()==0){
+                pb.setVisibility(View.VISIBLE);
+            }
+            tasks.add(this);
         }
 
         @Override
@@ -129,13 +155,19 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            updateDisplay(result);
 
+            list = CurrencyJSONParser.parseFeed(result);
+            updateDisplay();
+
+            tasks.remove(this);
+            if (tasks.size()==0){
+                pb.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
         protected void onProgressUpdate(String... values) {
-            updateDisplay(values[0]);
+
         }
 
     }

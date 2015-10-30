@@ -1,70 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GET CURRENCY RATE"
-        android:id="@+id/button3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="getCurrencyRate"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/textView"
-        android:layout_below="@+id/button3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <!--<ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="55dp"
-        android:layout_marginBottom="45dp"/>-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
         <Button
-            android:layout_width="150dp"
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CURRENCY LOG"
-            android:id="@+id/button2"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:onClick="btnClickHandlerSecondActivity"/>
-
-        <Button
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="CURRENCY GRAPH"
-            android:id="@+id/button4"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
+            android:onClick="getCurrencyRate"
+            android:text="GET CURRENCY RATE" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/button"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/button"
+            android:layout_marginTop="5dp"
+            android:text="CURRENCY"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imageView2"
+            android:layout_toLeftOf="@+id/textView4"
+            android:layout_toStartOf="@+id/textView4"
+            android:text="BUY"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imageView2"
             android:layout_alignParentEnd="true"
-            android:onClick="btnClickHandlerThirdActivity"/>
+            android:layout_alignParentRight="true"
+            android:text="SALE"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_toEndOf="@+id/imageView2"
+            android:layout_toRightOf="@+id/imageView2"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text="USD"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/usd" />
+
+        <TextView
+            android:id="@+id/saleUSD"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/textView5"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/buyUSD"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/textView5"
+            android:layout_toLeftOf="@+id/saleUSD"
+            android:layout_toStartOf="@+id/saleUSD"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView5"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/eur" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_toEndOf="@+id/imageView3"
+            android:layout_toRightOf="@+id/imageView3"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text="EUR"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/buyEUR"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/saleEUR"
+            android:layout_toLeftOf="@+id/saleEUR"
+            android:layout_toStartOf="@+id/saleEUR"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/saleEUR"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/imageView4"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView3"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/rur" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/imageView4"
+            android:layout_toEndOf="@+id/imageView4"
+            android:layout_toRightOf="@+id/imageView4"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text="EUR"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/saleRUR"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/textView11"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/buyRUR"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/saleRUR"
+            android:layout_toLeftOf="@+id/saleRUR"
+            android:layout_toStartOf="@+id/saleRUR"
+            android:padding="10dp"
+            android:paddingTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textIsSelectable="false" />
+
+
     </RelativeLayout>
-
-
-</RelativeLayout>
+</ScrollView>
