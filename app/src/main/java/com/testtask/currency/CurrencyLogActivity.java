@@ -2,30 +2,49 @@ package com.testtask.currency;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.testtask.currency.domain.Currency;
+import com.testtask.currency.service.CurrencyJSONParser;
+import com.testtask.currency.service.HttpManager;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class CurrencyLogActivity extends AppCompatActivity {
 
     private TextView tvDisplayDate;
-    private Button btnChangeDate;
 
     private int year;
     private int month;
     private int day;
+    List<Currency> list;
+
+    ProgressBar pb;
+    List<MyTask> tasks;
+
 
     private static final int DATE_DIALOG_ID = 999;
-
+    private final String logPbAPI = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
+    private final String pbAPI = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +52,20 @@ public class CurrencyLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_currency_log);
 
         setCurrentDateOnView();
+
+        pb = (ProgressBar) findViewById(R.id.progressBar);
+        pb.setVisibility(View.INVISIBLE);
+
+        tasks = new ArrayList<>();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(list!=null){
+//            updateDisplay();
+        }
     }
 
     @Override
@@ -122,5 +155,70 @@ public class CurrencyLogActivity extends AppCompatActivity {
 
     public void getCurrencyLogForSetDate(View view) {
 
+        if (isOnline()) {
+            String API = logPbAPI+day+"."+month+"."+year;
+            requestData(API);
+        } else {
+            Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
+        }
     }
+
+    protected boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void requestData(String uri) {
+        MyTask task = new MyTask();
+        task.execute(uri);
+    }
+
+    private void updateDisplay(String message) {
+        //stub
+        TextView output = (TextView) findViewById(R.id.output_stub);
+        output.setMovementMethod(new ScrollingMovementMethod());
+        output.append(message + "\n");
+    }
+
+    private class MyTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            if (tasks.size() == 0) {
+                pb.setVisibility(View.VISIBLE);
+            }
+            tasks.add(this);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String content = HttpManager.getData(params[0]);
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            //list = CurrencyJSONParser.parseFeed(result);
+            updateDisplay(result);
+
+            tasks.remove(this);
+            if (tasks.size() == 0) {
+                pb.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+
+        }
+
+    }
+
 }

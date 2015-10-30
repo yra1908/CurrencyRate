@@ -9,6 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.testtask.currency.CurrencyLogActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
 
     <Button
         android:id="@+id/btnChangeDate"
@@ -44,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="stub"
-        android:id="@+id/selected_date"
+        android:id="@+id/output_stub"
         android:layout_alignTop="@+id/listView2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
