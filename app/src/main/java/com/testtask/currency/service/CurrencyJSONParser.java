@@ -11,9 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by konstr on 30.10.2015.
- */
+
 public class CurrencyJSONParser {
 
     public static List<Currency> parseFeed(String content){
@@ -40,8 +38,6 @@ public class CurrencyJSONParser {
             e.printStackTrace();
             return null;
         }
-
-
     }
 
     public static List<Currency> parseLogFeed(String content) {

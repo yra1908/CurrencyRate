@@ -16,4 +16,5 @@
     <string name="get_data_button">Get Data</string>
     <string name="set_start_date_button">SET START DATE</string>
     <string name="set_end_date_button">SET END DATE</string>
+    <string name="build_graph_button">BUILD GRAPH</string>
 </resources>

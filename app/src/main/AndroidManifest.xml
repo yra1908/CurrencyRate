@@ -24,12 +24,11 @@
         <activity
             android:name=".CurrencyLogActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".MainActivity"
             android:configChanges="orientation|screenSize"></activity>
         <activity
             android:name=".CurrencyGraphActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".MainActivity"></activity>
+            android:configChanges="orientation|screenSize"></activity>
     </application>
 
 </manifest>

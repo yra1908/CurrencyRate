@@ -15,9 +15,7 @@ import com.testtask.currency.domain.Currency;
 
 import java.util.List;
 
-/**
- * Created by 41X on 30.10.2015.
- */
+
 public class CurrencyAdapter extends ArrayAdapter<Currency>{
 
     private  Context context;

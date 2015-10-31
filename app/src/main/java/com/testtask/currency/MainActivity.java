@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,13 +24,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ProgressBar pb;
-    List<MyTask> tasks;
+    private ProgressBar pb;
+    private List<MyTask> tasks;
+    private List<Currency> list;
 
-    List<Currency> list;
 
-
-    private final String pbAPI = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
+    private static final String PB_API = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 
 
     @Override
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     public void getCurrencyRate(View view) {
 
         if (isOnline()) {
-            requestData(pbAPI);
+            requestData(PB_API);
         } else {
             Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
         }
@@ -167,11 +165,5 @@ public class MainActivity extends AppCompatActivity {
                 pb.setVisibility(View.INVISIBLE);
             }
         }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-
-        }
-
     }
 }

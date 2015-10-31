@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+
 public class CurrencyLogActivity extends AppCompatActivity {
 
     private TextView tvDisplayDate;
@@ -38,12 +39,12 @@ public class CurrencyLogActivity extends AppCompatActivity {
     private int day;
     private List<Currency> list;
 
-    ProgressBar pb;
-    List<MyTask> tasks;
+    private ProgressBar pb;
+    private List<MyTask> tasks;
 
 
     private static final int DATE_DIALOG_ID = 999;
-    private final String logPbAPI = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
+    private static final String LOG_PB_API = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,6 @@ public class CurrencyLogActivity extends AppCompatActivity {
 
         // set current date into textview
         tvDisplayDate.setText(new StringBuilder()
-                // Month is 0 based, just add 1
                 .append(month + 1).append("-").append(day).append("-")
                 .append(year).append(" "));
 
@@ -129,35 +129,31 @@ public class CurrencyLogActivity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DATE_DIALOG_ID:
-                // set date picker as current date
-                return new DatePickerDialog(this, datePickerListener, year, month,
-                        day);
+                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,
+                        year, month, day);
         }
         return null;
     }
 
-    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener datePickerListener =
+            new DatePickerDialog.OnDateSetListener() {
 
-        // when dialog box is closed, below method will be called.
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
             year = selectedYear;
             month = selectedMonth;
             day = selectedDay;
 
-            // set selected date into textview
             tvDisplayDate.setText(new StringBuilder().append(month + 1)
                     .append("-").append(day).append("-").append(year)
                     .append(" "));
-
-            Log.d("LogActivity", "year="+year);
         }
     };
 
     public void getCurrencyLogForSetDate(View view) {
 
         if (isOnline()) {
-            String API = logPbAPI+day+"."+month+"."+year;
+            String API = LOG_PB_API +day+"."+month+"."+year;
             requestData(API);
         } else {
             Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
@@ -219,11 +215,6 @@ public class CurrencyLogActivity extends AppCompatActivity {
             if (tasks.size() == 0) {
                 pb.setVisibility(View.INVISIBLE);
             }
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-
         }
 
     }
