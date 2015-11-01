@@ -8,8 +8,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TreeMap;
 
 
 public class CurrencyJSONParser {
@@ -77,6 +83,38 @@ public class CurrencyJSONParser {
             return list;
 
         } catch (JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static TreeMap<Date, Currency> parseMinfinFeed(String content) {
+
+        try {
+            JSONArray ar = new JSONArray(content);
+            TreeMap<Date, Currency> mapData= new TreeMap<>();
+
+            for (int i=0; i<ar.length(); i++){
+
+                JSONObject obj = ar.getJSONObject(i);
+                Currency currency = new Currency();
+
+                currency.setName("USD");
+                currency.setSaleCoef(obj.getDouble("bid"));
+                currency.setBuyCoef(obj.getDouble("ask"));
+
+                DateFormat df = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
+                Date date =  df.parse(obj.getString("date"));
+
+                mapData.put(date, currency);
+            }
+
+            return mapData;
+
+        } catch (JSONException e){
+            e.printStackTrace();
+            return null;
+        } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }

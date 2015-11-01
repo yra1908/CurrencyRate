@@ -2,26 +2,52 @@ package com.testtask.currency;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.testtask.currency.domain.Currency;
+import com.testtask.currency.service.CurrencyJSONParser;
+import com.testtask.currency.service.HttpManager;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class CurrencyGraphActivity extends AppCompatActivity {
+
+    private static final String MINFIN_USD_API="http://minfin.com.ua/data/currency/ib/usd.ib.stock.json";
+    private static final String MINFIN_EUR_API="http://minfin.com.ua/data/currency/ib/eur.ib.stock.json";
+    private static final String MINFIN_RUB_API="http://minfin.com.ua/data/currency/ib/rub.ib.stock.json";
+    private static final String USD="USD";
+    private static final String EUR="EUR";
+    private static final String RUB="RUB";
 
     private static final int DATE_DIALOG_ID_1 = 999;
     private static final int DATE_DIALOG_ID_2 = 998;
@@ -32,6 +58,8 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     private int endYear;
     private int endMonth;
     private int endDay;
+    private String currencyType;
+    private TreeMap<Date, Currency> mapData;
 
     private GraphView graph;
     private LineGraphSeries<DataPoint> series;
@@ -48,8 +76,60 @@ public class CurrencyGraphActivity extends AppCompatActivity {
         setCurrentDateOnView();
 
         graph = (GraphView) findViewById(R.id.graph);
-        fillStructureGraph();
         /*graph.setVisibility(View.INVISIBLE);*/
+
+        //Spinner (dropdown)
+        Spinner dropdown = (Spinner)findViewById(R.id.spinner);
+        String[] items = new String[]{USD, EUR, RUB};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, items);
+        dropdown.setAdapter(adapter);
+
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                currencyType = (String) parent.getItemAtPosition(position);
+                getMinfinData();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                currencyType = USD;
+                getMinfinData();
+            }
+        });
+    }
+
+    private void getMinfinData() {
+        if (isOnline()) {
+            if(currencyType.equals(USD)){
+                requestData(MINFIN_USD_API);
+            }
+            if(currencyType.equals(EUR)){
+                requestData(MINFIN_EUR_API);
+            }
+            if(currencyType.equals(RUB)){
+                requestData(MINFIN_RUB_API);
+            }
+        } else {
+            Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    protected boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void requestData(String uri) {
+        MyTask task = new MyTask();
+        task.execute(uri);
     }
 
     @Override
@@ -62,40 +142,6 @@ public class CurrencyGraphActivity extends AppCompatActivity {
         }
     }
 
-    //Temporary stub. Need working API for curency change data.
-    private void fillStructureGraph() {
-
-        // generate Dates //need API for getting them
-        Calendar calendar = Calendar.getInstance();
-        Date d1 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d2 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d3 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d4 = calendar.getTime();
-        calendar.add(Calendar.DATE, 1);
-        Date d5 = calendar.getTime();
-
-        series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(d1, 20),
-                new DataPoint(d2, 25),
-                new DataPoint(d3, 23),
-                new DataPoint(d4, 25),
-                new DataPoint(d5, 21)
-        });
-
-        // set manual x bounds to have nice steps
-        graph.getViewport().setMinX(d1.getTime());
-        graph.getViewport().setMaxX(d5.getTime());
-        graph.getViewport().setXAxisBoundsManual(true);
-
-
-        // set date label formatter
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,8 +181,54 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     }
 
     public void buildGraph(View view) {
-        graph.addSeries(series);
+
+        Date startDate = null;
+        Date endDate =null;
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
+            startDate = df.parse(startYear+"-"+startMonth+"-"+startDay);
+            endDate = df.parse(endYear+"-"+endMonth+"-"+endDay);
+            Log.d("map dates startDate-", startDate.toString());
+            Log.d("map dates endDate-", endDate.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SortedMap<Date, Currency> mapDataToShow = mapData.subMap(startDate, endDate);
+
+        int count = mapDataToShow.size();
+
+        DataPoint[] values = new DataPoint[count];
+        int i = 0;
+
+        for (Map.Entry<Date, Currency> entry : mapDataToShow.entrySet()) {
+            Date d =entry.getKey();
+            double v = entry.getValue().getBuyCoef();
+            DataPoint temp = new DataPoint(d, v);
+            values[i] = temp;
+            i++;
+        }
+
+        series = new LineGraphSeries<DataPoint>(values);
+
+        // set manual x bounds to have nice steps
+        graph.getViewport().setMinX(mapDataToShow.firstKey().getTime());
+        graph.getViewport().setMaxX(mapDataToShow.lastKey().getTime());
         graph.getViewport().setXAxisBoundsManual(true);
+
+
+        // set date label formatter
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+
+        if(currencyType.equals(EUR)){
+            series.setColor(Color.RED);
+        }
+        if(currencyType.equals(RUB)){
+            series.setColor(Color.BLACK);
+        }
+        graph.addSeries(series);
+
     }
 
     // display current date
@@ -175,11 +267,14 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DATE_DIALOG_ID_1:
-                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,
+                /*//DatePicker theme
+                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,*/
+                return new DatePickerDialog(this, datePickerListener,
                         startYear, startMonth, startDay);
         }switch (id) {
             case DATE_DIALOG_ID_2:
-                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener2,
+               /* return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener2,*/
+                return new DatePickerDialog(this, datePickerListener2,
                         endYear, endMonth, endDay);
         }
         return null;
@@ -216,4 +311,23 @@ public class CurrencyGraphActivity extends AppCompatActivity {
 
                 }
             };
+
+    private class MyTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String content = HttpManager.getData(params[0]);
+            Log.d("map content -", content);
+            return content;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            mapData = CurrencyJSONParser.parseMinfinFeed(result);
+
+        }
+
+    }
 }

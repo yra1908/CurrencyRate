@@ -129,7 +129,9 @@ public class CurrencyLogActivity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DATE_DIALOG_ID:
-                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,
+                /*//DatePicker theme changed
+                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,*/
+                return new DatePickerDialog(this, datePickerListener,
                         year, month, day);
         }
         return null;
