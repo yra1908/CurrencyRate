@@ -182,53 +182,57 @@ public class CurrencyGraphActivity extends AppCompatActivity {
 
     public void buildGraph(View view) {
 
-        Date startDate = null;
-        Date endDate =null;
-        try {
-            DateFormat df = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
-            startDate = df.parse(startYear+"-"+startMonth+"-"+startDay);
-            endDate = df.parse(endYear+"-"+endMonth+"-"+endDay);
-            Log.d("map dates startDate-", startDate.toString());
-            Log.d("map dates endDate-", endDate.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (isOnline()) {
+            Date startDate = null;
+            Date endDate =null;
+            try {
+                DateFormat df = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
+                startDate = df.parse(startYear+"-"+startMonth+"-"+startDay);
+                endDate = df.parse(endYear+"-"+endMonth+"-"+endDay);
+                Log.d("map dates startDate-", startDate.toString());
+                Log.d("map dates endDate-", endDate.toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SortedMap<Date, Currency> mapDataToShow = mapData.subMap(startDate, endDate);
+
+            int count = mapDataToShow.size();
+
+            DataPoint[] values = new DataPoint[count];
+            int i = 0;
+
+            for (Map.Entry<Date, Currency> entry : mapDataToShow.entrySet()) {
+                Date d =entry.getKey();
+                double v = entry.getValue().getBuyCoef();
+                DataPoint temp = new DataPoint(d, v);
+                values[i] = temp;
+                i++;
+            }
+
+            series = new LineGraphSeries<DataPoint>(values);
+
+            // set manual x bounds to have nice steps
+            graph.getViewport().setMinX(mapDataToShow.firstKey().getTime());
+            graph.getViewport().setMaxX(mapDataToShow.lastKey().getTime());
+            graph.getViewport().setXAxisBoundsManual(true);
+
+
+            // set date label formatter
+            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+            graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+
+            if(currencyType.equals(EUR)){
+                series.setColor(Color.RED);
+            }
+            if(currencyType.equals(RUB)){
+                series.setColor(Color.BLACK);
+            }
+            graph.addSeries(series);
+
+        } else {
+            Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
         }
-
-        SortedMap<Date, Currency> mapDataToShow = mapData.subMap(startDate, endDate);
-
-        int count = mapDataToShow.size();
-
-        DataPoint[] values = new DataPoint[count];
-        int i = 0;
-
-        for (Map.Entry<Date, Currency> entry : mapDataToShow.entrySet()) {
-            Date d =entry.getKey();
-            double v = entry.getValue().getBuyCoef();
-            DataPoint temp = new DataPoint(d, v);
-            values[i] = temp;
-            i++;
-        }
-
-        series = new LineGraphSeries<DataPoint>(values);
-
-        // set manual x bounds to have nice steps
-        graph.getViewport().setMinX(mapDataToShow.firstKey().getTime());
-        graph.getViewport().setMaxX(mapDataToShow.lastKey().getTime());
-        graph.getViewport().setXAxisBoundsManual(true);
-
-
-        // set date label formatter
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-
-        if(currencyType.equals(EUR)){
-            series.setColor(Color.RED);
-        }
-        if(currencyType.equals(RUB)){
-            series.setColor(Color.BLACK);
-        }
-        graph.addSeries(series);
-
     }
 
     // display current date
