@@ -155,7 +155,9 @@ public class CurrencyLogActivity extends AppCompatActivity {
     public void getCurrencyLogForSetDate(View view) {
 
         if (isOnline()) {
-            String API = LOG_PB_API +day+"."+month+"."+year;
+            int inputMonth=month+1;
+            String API = LOG_PB_API + day + "."+ inputMonth + "." + year;
+            Log.d("string API - ", API);
             requestData(API);
         } else {
             Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();

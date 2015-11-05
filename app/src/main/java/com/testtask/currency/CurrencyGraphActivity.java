@@ -198,6 +198,12 @@ public class CurrencyGraphActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        if(startDate.after(endDate)){
+            Toast.makeText(this, "Date input Error. Start Date can't be after End Date.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
         SortedMap<Date, Currency> mapDataToShow = mapData.subMap(startDate, endDate);
 
         int count = mapDataToShow.size();
@@ -276,13 +282,13 @@ public class CurrencyGraphActivity extends AppCompatActivity {
                 /*//DatePicker theme
                 return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,*/
                 return new DatePickerDialog(this, datePickerListener,
-                        startYear, startMonth, startDay);
+                        startYear, startMonth-1, startDay);
         }
         switch (id) {
             case DATE_DIALOG_ID_2:
                /* return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener2,*/
                 return new DatePickerDialog(this, datePickerListener2,
-                        endYear, endMonth, endDay);
+                        endYear, endMonth-1, endDay);
         }
         return null;
     }
@@ -293,10 +299,10 @@ public class CurrencyGraphActivity extends AppCompatActivity {
                 public void onDateSet(DatePicker view, int selectedYear,
                                       int selectedMonth, int selectedDay) {
                     startYear = selectedYear;
-                    startMonth = selectedMonth;
+                    startMonth = selectedMonth+1;
                     startDay = selectedDay;
 
-                    tvDisplayStartDate.setText(new StringBuilder().append(startMonth + 1)
+                    tvDisplayStartDate.setText(new StringBuilder().append(startMonth)
                             .append("-").append(startDay).append("-").append(startYear)
                             .append(" "));
 
@@ -309,10 +315,10 @@ public class CurrencyGraphActivity extends AppCompatActivity {
                 public void onDateSet(DatePicker view, int selectedYear,
                                       int selectedMonth, int selectedDay) {
                     endYear = selectedYear;
-                    endMonth = selectedMonth;
+                    endMonth = selectedMonth+1;
                     endDay = selectedDay;
 
-                    tvDisplayEndDate.setText(new StringBuilder().append(endMonth + 1)
+                    tvDisplayEndDate.setText(new StringBuilder().append(endMonth)
                             .append("-").append(endDay).append("-").append(endYear)
                             .append(" "));
 
