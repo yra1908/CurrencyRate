@@ -42,12 +42,12 @@ import java.util.TreeMap;
 
 public class CurrencyGraphActivity extends AppCompatActivity {
 
-    private static final String MINFIN_USD_API="http://minfin.com.ua/data/currency/ib/usd.ib.stock.json";
-    private static final String MINFIN_EUR_API="http://minfin.com.ua/data/currency/ib/eur.ib.stock.json";
-    private static final String MINFIN_RUB_API="http://minfin.com.ua/data/currency/ib/rub.ib.stock.json";
-    private static final String USD="USD";
-    private static final String EUR="EUR";
-    private static final String RUB="RUB";
+    private static final String MINFIN_USD_API = "http://minfin.com.ua/data/currency/ib/usd.ib.stock.json";
+    private static final String MINFIN_EUR_API = "http://minfin.com.ua/data/currency/ib/eur.ib.stock.json";
+    private static final String MINFIN_RUB_API = "http://minfin.com.ua/data/currency/ib/rub.ib.stock.json";
+    private static final String USD = "USD";
+    private static final String EUR = "EUR";
+    private static final String RUB = "RUB";
 
     private static final int DATE_DIALOG_ID_1 = 999;
     private static final int DATE_DIALOG_ID_2 = 998;
@@ -79,7 +79,7 @@ public class CurrencyGraphActivity extends AppCompatActivity {
         /*graph.setVisibility(View.INVISIBLE);*/
 
         //Spinner (dropdown)
-        Spinner dropdown = (Spinner)findViewById(R.id.spinner);
+        Spinner dropdown = (Spinner) findViewById(R.id.spinner);
         String[] items = new String[]{USD, EUR, RUB};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, items);
@@ -103,13 +103,13 @@ public class CurrencyGraphActivity extends AppCompatActivity {
 
     private void getMinfinData() {
         if (isOnline()) {
-            if(currencyType.equals(USD)){
+            if (currencyType.equals(USD)) {
                 requestData(MINFIN_USD_API);
             }
-            if(currencyType.equals(EUR)){
+            if (currencyType.equals(EUR)) {
                 requestData(MINFIN_EUR_API);
             }
-            if(currencyType.equals(RUB)){
+            if (currencyType.equals(RUB)) {
                 requestData(MINFIN_RUB_API);
             }
         } else {
@@ -136,7 +136,7 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if(series!=null){
+        if (series != null) {
             graph.addSeries(series);
             graph.getViewport().setXAxisBoundsManual(true);
         }
@@ -166,73 +166,74 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     }
 
     public void btnClickHandlerThirdActivity2(MenuItem item) {
-        Intent thirdActivity = new Intent(this,  CurrencyGraphActivity.class);
+        Intent thirdActivity = new Intent(this, CurrencyGraphActivity.class);
         startActivity(thirdActivity);
     }
 
     public void btnClickHandlerSecondActivity2(MenuItem item) {
-        Intent secondActivity = new Intent(this,  CurrencyLogActivity.class);
+        Intent secondActivity = new Intent(this, CurrencyLogActivity.class);
         startActivity(secondActivity);
     }
 
     public void btnClickHandlerFirstActivity2(MenuItem item) {
-        Intent firstActivity = new Intent(this,  MainActivity.class);
+        Intent firstActivity = new Intent(this, MainActivity.class);
         startActivity(firstActivity);
     }
 
     public void buildGraph(View view) {
 
-        if (isOnline()) {
-            Date startDate = null;
-            Date endDate =null;
-            try {
-                DateFormat df = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
-                startDate = df.parse(startYear+"-"+startMonth+"-"+startDay);
-                endDate = df.parse(endYear+"-"+endMonth+"-"+endDay);
-                Log.d("map dates startDate-", startDate.toString());
-                Log.d("map dates endDate-", endDate.toString());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            SortedMap<Date, Currency> mapDataToShow = mapData.subMap(startDate, endDate);
-
-            int count = mapDataToShow.size();
-
-            DataPoint[] values = new DataPoint[count];
-            int i = 0;
-
-            for (Map.Entry<Date, Currency> entry : mapDataToShow.entrySet()) {
-                Date d =entry.getKey();
-                double v = entry.getValue().getBuyCoef();
-                DataPoint temp = new DataPoint(d, v);
-                values[i] = temp;
-                i++;
-            }
-
-            series = new LineGraphSeries<DataPoint>(values);
-
-            // set manual x bounds to have nice steps
-            graph.getViewport().setMinX(mapDataToShow.firstKey().getTime());
-            graph.getViewport().setMaxX(mapDataToShow.lastKey().getTime());
-            graph.getViewport().setXAxisBoundsManual(true);
-
-
-            // set date label formatter
-            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
-            graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-
-            if(currencyType.equals(EUR)){
-                series.setColor(Color.RED);
-            }
-            if(currencyType.equals(RUB)){
-                series.setColor(Color.BLACK);
-            }
-            graph.addSeries(series);
-
-        } else {
+        if (!isOnline()) {
             Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
+            return;
         }
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault());
+            startDate = df.parse(startYear + "-" + startMonth + "-" + startDay);
+            endDate = df.parse(endYear + "-" + endMonth + "-" + endDay);
+            Log.d("map dates startDate-", startDate.toString());
+            Log.d("map dates endDate-", endDate.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SortedMap<Date, Currency> mapDataToShow = mapData.subMap(startDate, endDate);
+
+        int count = mapDataToShow.size();
+
+        DataPoint[] values = new DataPoint[count];
+        int i = 0;
+
+        for (Map.Entry<Date, Currency> entry : mapDataToShow.entrySet()) {
+            Date d = entry.getKey();
+            double v = entry.getValue().getBuyCoef();
+            DataPoint temp = new DataPoint(d, v);
+            values[i] = temp;
+            i++;
+        }
+
+        series = new LineGraphSeries<DataPoint>(values);
+
+        // set manual x bounds to have nice steps
+        graph.getViewport().setMinX(mapDataToShow.firstKey().getTime());
+        graph.getViewport().setMaxX(mapDataToShow.lastKey().getTime());
+        graph.getViewport().setXAxisBoundsManual(true);
+
+
+        // set date label formatter
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+
+        if (currencyType.equals(EUR)) {
+            series.setColor(Color.RED);
+        }
+        if (currencyType.equals(RUB)) {
+            series.setColor(Color.BLACK);
+        }
+        graph.addSeries(series);
+
+
     }
 
     // display current date
@@ -240,14 +241,14 @@ public class CurrencyGraphActivity extends AppCompatActivity {
 
         final Calendar c = Calendar.getInstance();
         endYear = c.get(Calendar.YEAR);
-        endMonth = c.get(Calendar.MONTH);
+        endMonth = c.get(Calendar.MONTH)+1;
         endDay = c.get(Calendar.DAY_OF_MONTH);
-        startDay=endDay;
-        startMonth=endMonth;
-        startYear=endYear-1;
+        startDay = endDay;
+        startMonth = endMonth;
+        startYear = endYear - 1;
 
         tvDisplayEndDate.setText(new StringBuilder()
-                .append(endMonth + 1).append("-").append(endDay).append("-")
+                .append(endMonth).append("-").append(endDay).append("-")
                 .append(endYear).append(" "));
 
         tvDisplayStartDate.setText(new StringBuilder()
@@ -266,6 +267,7 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     public void setEndDate(View view) {
         showDialog(DATE_DIALOG_ID_2);
     }
+
     @SuppressWarnings("deprecation")
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -275,7 +277,8 @@ public class CurrencyGraphActivity extends AppCompatActivity {
                 return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,*/
                 return new DatePickerDialog(this, datePickerListener,
                         startYear, startMonth, startDay);
-        }switch (id) {
+        }
+        switch (id) {
             case DATE_DIALOG_ID_2:
                /* return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener2,*/
                 return new DatePickerDialog(this, datePickerListener2,
