@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +34,10 @@ import com.testtask.currency.service.HttpManager;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
@@ -65,11 +68,18 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     private LineGraphSeries<DataPoint> series;
     private TextView tvDisplayStartDate;
     private TextView tvDisplayEndDate;
+    private ProgressBar pb;
+    private List<MyTask> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency_graph);
+
+        pb = (ProgressBar) findViewById(R.id.progressBar);
+        pb.setVisibility(View.INVISIBLE);
+
+        tasks = new ArrayList<>();
 
         tvDisplayStartDate = (TextView) findViewById(R.id.startDateRes);
         tvDisplayEndDate = (TextView) findViewById(R.id.endDateRes);
@@ -186,6 +196,12 @@ public class CurrencyGraphActivity extends AppCompatActivity {
             Toast.makeText(this, "Network isn't available", Toast.LENGTH_LONG).show();
             return;
         }
+
+        if(mapData.isEmpty()){
+            Toast.makeText(this, "Error. No Data for building graph.",
+                    Toast.LENGTH_LONG).show();
+        }
+
         Date startDate = null;
         Date endDate = null;
         try {
@@ -325,13 +341,24 @@ public class CurrencyGraphActivity extends AppCompatActivity {
                 }
             };
 
+    public void clearGraph(View view) {
+        graph.removeAllSeries();
+    }
+
     private class MyTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            if (tasks.size() == 0) {
+                pb.setVisibility(View.VISIBLE);
+            }
+            tasks.add(this);
+        }
 
         @Override
         protected String doInBackground(String... params) {
 
             String content = HttpManager.getData(params[0]);
-            Log.d("map content -", content);
             return content;
         }
 
@@ -339,6 +366,11 @@ public class CurrencyGraphActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
 
             mapData = CurrencyJSONParser.parseMinfinFeed(result);
+
+            tasks.remove(this);
+            if (tasks.size() == 0) {
+                pb.setVisibility(View.INVISIBLE);
+            }
 
         }
 

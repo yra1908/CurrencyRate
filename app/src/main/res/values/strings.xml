@@ -17,5 +17,6 @@
     <string name="set_start_date_button">SET START DATE</string>
     <string name="set_end_date_button">SET END DATE</string>
     <string name="build_graph_button">BUILD GRAPH</string>
+    <string name="clear_graph_button">CLEAR GRAPH</string>
     <string name="curency_type">Currency Type</string>
 </resources>
