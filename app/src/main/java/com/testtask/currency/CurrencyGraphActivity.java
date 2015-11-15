@@ -52,9 +52,6 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     private static final String EUR = "EUR";
     private static final String RUB = "RUB";
 
-    private static final int DATE_DIALOG_ID_1 = 999;
-    private static final int DATE_DIALOG_ID_2 = 998;
-
     private int startYear;
     private int startMonth;
     private int startDay;
@@ -280,34 +277,22 @@ public class CurrencyGraphActivity extends AppCompatActivity {
     }
 
 
-    @SuppressWarnings("deprecation")
     public void setStartDate(View view) {
-        showDialog(DATE_DIALOG_ID_1);
+        int inputMonth=startMonth-1;
+        DatePickerDialog d = new DatePickerDialog(this,
+                datePickerListener, startYear, inputMonth, startDay);
+        d.show();
     }
 
-    @SuppressWarnings("deprecation")
+
     public void setEndDate(View view) {
-        showDialog(DATE_DIALOG_ID_2);
+        int inputMonth=endMonth-1;
+        DatePickerDialog d = new DatePickerDialog(this,
+                datePickerListener2, endYear, inputMonth, endDay);
+        d.show();
+
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_DIALOG_ID_1:
-                /*//DatePicker theme
-                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,*/
-                return new DatePickerDialog(this, datePickerListener,
-                        startYear, startMonth-1, startDay);
-        }
-        switch (id) {
-            case DATE_DIALOG_ID_2:
-               /* return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener2,*/
-                return new DatePickerDialog(this, datePickerListener2,
-                        endYear, endMonth-1, endDay);
-        }
-        return null;
-    }
 
     private DatePickerDialog.OnDateSetListener datePickerListener =
             new DatePickerDialog.OnDateSetListener() {

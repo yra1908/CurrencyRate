@@ -42,8 +42,6 @@ public class CurrencyLogActivity extends AppCompatActivity {
     private ProgressBar pb;
     private List<MyTask> tasks;
 
-
-    private static final int DATE_DIALOG_ID = 999;
     private static final String LOG_PB_API = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
 
     @Override
@@ -117,24 +115,11 @@ public class CurrencyLogActivity extends AppCompatActivity {
 
     }
 
-    //setting date for query
-    @SuppressWarnings("deprecation")
+
     public void setDate(View view) {
-
-        showDialog(DATE_DIALOG_ID);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_DIALOG_ID:
-                /*//DatePicker theme changed
-                return new DatePickerDialog(this, R.style.datePickerTheme, datePickerListener,*/
-                return new DatePickerDialog(this, datePickerListener,
-                        year, month, day);
-        }
-        return null;
+        DatePickerDialog d = new DatePickerDialog(this,
+                datePickerListener, year, month, day);
+        d.show();
     }
 
     private DatePickerDialog.OnDateSetListener datePickerListener =
